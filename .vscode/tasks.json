@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Generate easy_localization keys",
+			"type": "shell",
+			"command": "dart run easy_localization:generate -S ./assets/translations -f keys -O ./lib/generated -o locale_keys.g.dart",
+			"args": [],
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "gen:locale_keys",
+			"type": "shell",
+			"command": "dart run easy_localization:generate -S ./assets/translations -f keys -O ./lib/generated -o locale_keys.g.dart",
+			"isBackground": false,
+			"problemMatcher": [
+				"$dart-json"
+			],
+			"group": "build"
+		}
+	]
+}

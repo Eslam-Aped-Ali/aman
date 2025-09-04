@@ -1,0 +1,42 @@
+class NamedRoutes {
+  static NamedRoutes get i => NamedRoutes._internal();
+  NamedRoutes._internal();
+  final home = '/home';
+  final driverApprovalScreen = '/driverApproval';
+  final themeDemo = '/themeDemo';
+  final themeSettings = '/themeSettings';
+  final themeExample = '/themeExample';
+  final intro = '/intro';
+  final login = '/login';
+  final register = '/register';
+  final otp = '/otp';
+  final selectRole = '/selectRole';
+  final layout = '/layout';
+  final error = '/error';
+  final internet = '/internet';
+  final splash = '/splash';
+  final settings = '/settings';
+  final helpSupport = '/helpSupport';
+  final settingsDemo = '/settingsDemo';
+
+  final driverRegister = '/driverRegister';
+  final adminRegister = '/adminRegister';
+  final passengerCompleteProfile = '/passengerCompleteProfile';
+  final driverCompleteProfile = '/driverCompleteProfile';
+  final passengerHome = '/passengerHome';
+  final passengerProfile = '/passengerProfile';
+  final driverHome = '/driverHome';
+  final driverProfile = '/driverProfile';
+  final driverMain = '/driverMain';
+  final adminDashboard = '/adminDashboard';
+  final profile = '/profile';
+  final notifications = '/notifications';
+  final search = '/search';
+  final feedback = '/feedback';
+  final about = '/about';
+  final privacyPolicy = '/privacyPolicy';
+  final termsOfService = '/termsOfService';
+  final aboutUs = '/aboutUs';
+  final contactUs = '/contactUs';
+  final help = '/help';
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1018051462148",
+    "project_id": "aman-49e04",
+    "storage_bucket": "aman-49e04.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018051462148:android:5306926baf79ffaec7e151",
+        "android_client_info": {
+          "package_name": "com.Aman.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsElDdjI_SpcR2T9uxZKaiujHESb8Ei3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
