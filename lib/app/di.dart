@@ -32,15 +32,26 @@ import '../features/driver/profile_management/domain/usecases/contact_admin.dart
 
 // Driver Trips Management Imports
 import '../features/driver/trips_management/data/datasources/driver_trips_local_data_source.dart';
+import '../features/driver/trips_management/data/datasources/driver_trips_remote_data_source.dart';
 import '../features/driver/trips_management/data/repositories/driver_trips_repository_impl.dart';
 import '../features/driver/trips_management/domain/repositories/driver_trips_repository.dart';
 import '../features/driver/trips_management/domain/usecases/get_current_trips.dart';
 import '../features/driver/trips_management/domain/usecases/get_trip_history.dart';
+import '../features/driver/trips_management/domain/usecases/get_trips_by_status.dart';
 import '../features/driver/trips_management/domain/usecases/get_trip_passengers.dart';
 import '../features/driver/trips_management/domain/usecases/update_passenger_status.dart';
 import '../features/driver/trips_management/domain/usecases/notify_passenger_arrival.dart';
 import '../features/driver/trips_management/domain/usecases/start_trip.dart';
 import '../features/driver/trips_management/domain/usecases/complete_trip.dart';
+import '../features/driver/trips_management/domain/usecases/update_trip_status.dart';
+
+// Passenger Profile Management Imports
+import '../features/passenger/profile/data/datasources/passenger_profile_data_source.dart';
+import '../features/passenger/profile/data/datasources/passenger_profile_local_data_source_impl.dart';
+import '../features/passenger/profile/data/datasources/passenger_profile_remote_data_source_impl.dart';
+import '../features/passenger/profile/data/repositories/passenger_profile_repository_impl.dart';
+import '../features/passenger/profile/domain/repositories/passenger_profile_repository.dart';
+import '../features/passenger/profile/domain/usecases/passenger_profile_usecases.dart';
 
 final sl = GetIt.instance;
 
@@ -130,7 +141,29 @@ Future<void> _initializeProfileFeature() async {
   // Profile Feature Cubits
   sl.registerFactory<SettingsCubit>(() => SettingsCubit());
   sl.registerFactory<LanguageCubit>(() => LanguageCubit());
-  
+
+  // Passenger Profile Management - Data Sources
+  sl.registerLazySingleton<PassengerProfileLocalDataSource>(
+    () => PassengerProfileLocalDataSourceImpl(),
+  );
+
+  sl.registerLazySingleton<PassengerProfileRemoteDataSource>(
+    () => PassengerProfileRemoteDataSourceImpl(),
+  );
+
+  // Passenger Profile Management - Repositories
+  sl.registerLazySingleton<PassengerProfileRepository>(
+    () => PassengerProfileRepositoryImpl(
+      remoteDataSource: sl<PassengerProfileRemoteDataSource>(),
+      localDataSource: sl<PassengerProfileLocalDataSource>(),
+    ),
+  );
+
+  // Passenger Profile Management - Use Cases
+  sl.registerLazySingleton(() => GetPassengerProfileUseCase(sl()));
+  sl.registerLazySingleton(() => UpdatePassengerProfileUseCase(sl()));
+  sl.registerLazySingleton(() => UpdatePassengerPreferencesUseCase(sl()));
+
   // Register PassengerProfileCubit
   sl.registerFactory(() => PassengerProfileCubit(
         getProfileUseCase: sl(),
@@ -161,20 +194,28 @@ Future<void> _initializeDriverFeature() async {
   sl.registerLazySingleton<DriverTripsLocalDataSource>(
     () => DriverTripsLocalDataSourceImpl(),
   );
+  sl.registerLazySingleton<DriverTripsRemoteDataSource>(
+    () => DriverTripsRemoteDataSourceImpl(),
+  );
 
   // Trips Management - Repositories
   sl.registerLazySingleton<DriverTripsRepository>(
-    () => DriverTripsRepositoryImpl(localDataSource: sl()),
+    () => DriverTripsRepositoryImpl(
+      localDataSource: sl(),
+      remoteDataSource: sl(),
+    ),
   );
 
   // Trips Management - Use Cases
   sl.registerLazySingleton(() => GetCurrentTripsUseCase(sl()));
   sl.registerLazySingleton(() => GetTripHistoryUseCase(sl()));
+  sl.registerLazySingleton(() => GetTripsByStatusUseCase(sl()));
   sl.registerLazySingleton(() => GetTripPassengersUseCase(sl()));
   sl.registerLazySingleton(() => UpdatePassengerStatusUseCase(sl()));
   sl.registerLazySingleton(() => NotifyPassengerArrivalUseCase(sl()));
   sl.registerLazySingleton(() => StartTripUseCase(sl()));
   sl.registerLazySingleton(() => CompleteTripUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateTripStatusUseCase(sl()));
 
   // BLoCs
   sl.registerFactory(() => DriverProfileBloc(
@@ -192,5 +233,7 @@ Future<void> _initializeDriverFeature() async {
         notifyPassengerArrivalUseCase: sl(),
         startTripUseCase: sl(),
         completeTripUseCase: sl(),
+        getTripsByStatusUseCase: sl(),
+        updateTripStatusUseCase: sl(),
       ));
 }

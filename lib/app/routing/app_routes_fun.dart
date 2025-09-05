@@ -86,7 +86,7 @@ enum NavigatorAnimation { opacity, scale, position }
 void showMessage(String msg,
     {MessageTypeTost messageType = MessageTypeTost.success}) {
   if (msg.isNotEmpty) {
-    FlashHelper.showToast(msg, duration: 6, type: messageType);
+    FlashHelper.showToast(msg, duration: 8, type: messageType);
   }
 }
 

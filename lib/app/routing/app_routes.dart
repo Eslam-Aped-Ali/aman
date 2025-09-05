@@ -3,12 +3,11 @@ import 'package:Aman/features/driver/profile_management/presentation/view/screen
 import 'package:Aman/features/driver/profile_management/presentation/view/screens/driver_profile_screen_new.dart';
 import 'package:Aman/features/driver/profile_management/presentation/view/screens/waiting_approval_screen.dart';
 import 'package:Aman/features/passenger/home/presentation/view/screens/passenger_home_screen_new.dart';
-import 'package:Aman/features/passenger/profile/domain/entities/passenger_profile.dart';
 import 'package:Aman/features/passenger/profile/presentation/viewModel/profile_cubit/passenger_profile_cubit.dart';
 import 'package:Aman/features/shared_fetaures/auth/presentation/bloc/auth_cubit.dart';
 import 'package:Aman/features/shared_fetaures/auth/presentation/view/screens/login_screen.dart';
 import 'package:Aman/features/shared_fetaures/auth/presentation/view/screens/registration_screen.dart';
-import 'package:Aman/features/shared_fetaures/splash/splash_screen.dart';
+import 'package:Aman/features/shared_fetaures/splash/enhanced_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,7 +32,7 @@ class AppRoutes {
   AppRoutes._internal();
 
   Map<String, Widget Function(BuildContext c)> appRoutes = {
-    NamedRoutes.i.splash: (c) => const SplashScreen(),
+    NamedRoutes.i.splash: (c) => const EnhancedSplashScreen(),
     NamedRoutes.i.driverApprovalScreen: (c) {
       final args = ModalRoute.of(c)?.settings.arguments as Map<String, dynamic>;
       return BlocProvider<DriverProfileBloc>(
@@ -81,7 +80,11 @@ class AppRoutes {
           ModalRoute.of(c)?.settings.arguments as Map<String, dynamic>?;
       return BlocProvider<AuthCubit>(
         create: (context) => sl<AuthCubit>(),
-        child: LoginScreen(userRole: args?['userRole']),
+        child: LoginScreen(
+          userRole: args?['userRole'],
+          preFilledPhone: args?['preFilledPhone'],
+          preFilledPassword: args?['preFilledPassword'],
+        ),
       );
     },
 

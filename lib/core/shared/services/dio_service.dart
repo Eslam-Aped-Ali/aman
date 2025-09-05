@@ -645,6 +645,12 @@ class _AuthInterceptor extends Interceptor {
 class _LoggingInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    // Debug: Print detailed URL information
+    print('🔍 DEBUG - Base URL: "${options.baseUrl}"');
+    print('🔍 DEBUG - Path: "${options.path}"');
+    print('🔍 DEBUG - Full URI: "${options.uri}"');
+    print('🔍 DEBUG - Method: ${options.method}');
+
     Console.printInfo('🌐 ${options.method} ${options.uri}');
     Console.printDebug('Headers: ${options.headers}');
     Console.printDebug('Data: ${options.data}');

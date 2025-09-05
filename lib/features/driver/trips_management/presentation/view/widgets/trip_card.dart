@@ -50,7 +50,7 @@ class TripCard extends StatelessWidget {
             _buildTripHeader(isDarkMode, responsive),
             SizedBox(height: responsive.spacing(16)),
             _buildTripDetails(isDarkMode, responsive),
-            if (trip.isInProgress) ...[
+            if (trip.isStarted) ...[
               SizedBox(height: responsive.spacing(16)),
               _buildProgressBar(isDarkMode, responsive),
             ],
@@ -235,7 +235,7 @@ class TripCard extends StatelessWidget {
   Widget _buildActionButtons(ResponsiveUtils responsive) {
     return Row(
       children: [
-        if (trip.isAssigned && !trip.isUpcoming) ...[
+        if (trip.isScheduled && !trip.isUpcoming) ...[
           Expanded(
             child: ElevatedButton(
               onPressed: onStartTrip,
@@ -270,7 +270,7 @@ class TripCard extends StatelessWidget {
             ),
           ),
         ),
-        if (trip.isInProgress) ...[
+        if (trip.isStarted) ...[
           SizedBox(width: responsive.spacing(12)),
           Expanded(
             child: ElevatedButton(
@@ -295,9 +295,9 @@ class TripCard extends StatelessWidget {
 
   Color _getStatusColor(DriverTripStatus status) {
     switch (status) {
-      case DriverTripStatus.assigned:
+      case DriverTripStatus.scheduled:
         return Colors.orange;
-      case DriverTripStatus.inProgress:
+      case DriverTripStatus.started:
         return Colors.blue;
       case DriverTripStatus.completed:
         return Colors.green;
@@ -308,9 +308,9 @@ class TripCard extends StatelessWidget {
 
   IconData _getStatusIcon(DriverTripStatus status) {
     switch (status) {
-      case DriverTripStatus.assigned:
-        return Icons.assignment_turned_in;
-      case DriverTripStatus.inProgress:
+      case DriverTripStatus.scheduled:
+        return Icons.schedule;
+      case DriverTripStatus.started:
         return Icons.directions_bus;
       case DriverTripStatus.completed:
         return Icons.check_circle;

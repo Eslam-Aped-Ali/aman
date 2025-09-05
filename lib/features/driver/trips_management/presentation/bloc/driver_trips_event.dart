@@ -17,6 +17,19 @@ class LoadCurrentTrips extends DriverTripsEvent {
   List<Object?> get props => [driverId];
 }
 
+class LoadTripsByStatus extends DriverTripsEvent {
+  final String driverId;
+  final String status; // SCHEDULED, STARTED, COMPLETED, CANCELLED
+
+  const LoadTripsByStatus({
+    required this.driverId,
+    required this.status,
+  });
+
+  @override
+  List<Object?> get props => [driverId, status];
+}
+
 class LoadTripHistory extends DriverTripsEvent {
   final String driverId;
 
@@ -79,6 +92,19 @@ class CompleteTrip extends DriverTripsEvent {
 
   @override
   List<Object?> get props => [tripId];
+}
+
+class UpdateTripStatus extends DriverTripsEvent {
+  final String tripId;
+  final String status; // SCHEDULED, STARTED, COMPLETED, CANCELLED
+
+  const UpdateTripStatus({
+    required this.tripId,
+    required this.status,
+  });
+
+  @override
+  List<Object?> get props => [tripId, status];
 }
 
 class RefreshCurrentTrips extends DriverTripsEvent {

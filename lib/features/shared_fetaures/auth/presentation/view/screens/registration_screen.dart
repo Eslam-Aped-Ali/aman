@@ -139,11 +139,14 @@ class _RegistrationScreenState extends State<RegistrationScreen>
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.requestState == RequestState.done) {
-            // Show success message and navigate to login
+            // Show success message and navigate to login with pre-filled credentials
             showMessage('Registration successful! Please login to continue.',
                 messageType: MessageTypeTost.success);
-            pushAndRemoveUntil(NamedRoutes.i.login,
-                arguments: {'userRole': widget.userRole});
+            pushAndRemoveUntil(NamedRoutes.i.login, arguments: {
+              'userRole': widget.userRole,
+              'preFilledPhone': phoneController.text.trim(),
+              'preFilledPassword': passwordController.text,
+            });
           } else if (state.requestState == RequestState.error) {
             showMessage(state.msg, messageType: MessageTypeTost.fail);
           }

@@ -1,6 +1,7 @@
 // lib/features/shared_features/auth/presentation/screens/login_screen.dart
 import 'package:Aman/app/routing/routes.dart';
 import 'package:Aman/core/shared/utils/user_exprience/flash_helper.dart';
+import 'package:Aman/features/shared_fetaures/auth/domain/entities/user.dart';
 import 'package:Aman/features/shared_fetaures/auth/presentation/bloc/auth_cubit.dart';
 import 'package:Aman/features/shared_fetaures/auth/presentation/bloc/auth_state.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -13,10 +14,14 @@ import 'package:Aman/generated/locale_keys.g.dart';
 
 class LoginScreen extends StatefulWidget {
   final String? userRole;
+  final String? preFilledPhone;
+  final String? preFilledPassword;
 
   const LoginScreen({
     super.key,
     this.userRole,
+    this.preFilledPhone,
+    this.preFilledPassword,
   });
 
   @override
@@ -39,6 +44,45 @@ class _LoginScreenState extends State<LoginScreen>
   void initState() {
     super.initState();
     _setupAnimations();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _preFlillFields();
+  }
+
+  void _preFlillFields() {
+    // Get arguments from the route
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    bool hasPreFilledData = false;
+
+    // Pre-fill phone and password if provided from registration
+    if (widget.preFilledPhone != null) {
+      phoneController.text = widget.preFilledPhone!;
+      hasPreFilledData = true;
+    } else if (args?['preFilledPhone'] != null) {
+      phoneController.text = args!['preFilledPhone'];
+      hasPreFilledData = true;
+    }
+
+    if (widget.preFilledPassword != null) {
+      passwordController.text = widget.preFilledPassword!;
+      hasPreFilledData = true;
+    } else if (args?['preFilledPassword'] != null) {
+      passwordController.text = args!['preFilledPassword'];
+      hasPreFilledData = true;
+    }
+
+    // Show a brief message if fields were pre-filled
+    if (hasPreFilledData && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showMessage(LocaleKeys.auth_credentialsPreFilled.tr(),
+            messageType: MessageTypeTost.success);
+      });
+    }
   }
 
   void _setupAnimations() {
@@ -99,9 +143,29 @@ class _LoginScreenState extends State<LoginScreen>
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.requestState == RequestState.done) {
-            // Navigate based on user role
+            // Get the actual user from AuthCubit
+            final authCubit = context.read<AuthCubit>();
+            final user = authCubit.currentUser;
+
+            // Use the user's actual role from the API response, not the widget parameter
+            String userType = 'passenger'; // default fallback
+            if (user != null) {
+              switch (user.role) {
+                case UserRole.ADMIN:
+                  userType = 'admin';
+                  break;
+                case UserRole.DRIVER:
+                  userType = 'driver';
+                  break;
+                case UserRole.PASSENGER:
+                  userType = 'passenger';
+                  break;
+              }
+            }
+
+            // Navigate based on user's actual role from API
             pushAndRemoveUntil(NamedRoutes.i.layout,
-                arguments: {'userType': widget.userRole ?? 'passenger'});
+                arguments: {'userType': userType});
           } else if (state.requestState == RequestState.error) {
             showMessage(state.msg, messageType: MessageTypeTost.fail);
           }

@@ -9,6 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../app/di.dart';
 import '../../../../driver/profile_management/presentation/bloc/driver_profile_bloc.dart';
 import '../../../../driver/trips_management/presentation/bloc/driver_trips_bloc.dart';
+import '../../../../passenger/profile/presentation/viewModel/profile_cubit/passenger_profile_cubit.dart';
+import '../../../../shared_fetaures/auth/presentation/bloc/auth_cubit.dart';
 
 // Admin screens
 import '../../../../admin/presentation/screens/admin_dashboard_screen.dart';
@@ -66,7 +68,10 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       case 3:
         return const AdminAnalyticsScreen();
       case 4:
-        return const AdminProfileScreen();
+        return BlocProvider<AuthCubit>(
+          create: (context) => sl<AuthCubit>(),
+          child: const AdminProfileScreen(),
+        );
       default:
         return const AdminDashboardScreen();
     }
@@ -119,7 +124,17 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
       case 3:
         return const BookNowScreen();
       case 4:
-        return const PassengerProfileScreen();
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<PassengerProfileCubit>(
+              create: (context) => sl<PassengerProfileCubit>(),
+            ),
+            BlocProvider<AuthCubit>(
+              create: (context) => sl<AuthCubit>(),
+            ),
+          ],
+          child: const PassengerProfileScreen(),
+        );
       default:
         return const PassengerHomeScreen();
     }

@@ -71,6 +71,16 @@ class TripCompleted extends DriverTripsState {
   List<Object?> get props => [trip];
 }
 
+class TripStatusUpdated extends DriverTripsState {
+  final DriverTrip trip;
+  final String status;
+
+  const TripStatusUpdated(this.trip, this.status);
+
+  @override
+  List<Object?> get props => [trip, status];
+}
+
 class PassengerNotified extends DriverTripsState {
   final String message;
 

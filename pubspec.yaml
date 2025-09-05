@@ -124,7 +124,6 @@ flutter_native_splash:
   image_dark: assets/images/app_logo.png
   fullscreen: true
   android_gravity: center
-
   android_12:
     image: assets/images/app_logo.png
     image_dark: assets/images/app_logo.png

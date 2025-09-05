@@ -104,7 +104,7 @@ class _RouteNavigationScreenState extends State<RouteNavigationScreen>
       builder: (context, state) {
         if (state is CurrentTripsLoaded) {
           final activeTrip =
-              state.trips.where((trip) => trip.isInProgress).firstOrNull;
+              state.trips.where((trip) => trip.isStarted).firstOrNull;
 
           if (activeTrip != null) {
             currentTrip = activeTrip;

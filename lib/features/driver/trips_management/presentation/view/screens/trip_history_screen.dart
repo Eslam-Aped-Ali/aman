@@ -27,6 +27,7 @@ class _TripHistoryScreenState extends State<TripHistoryScreen>
 
   void _loadTripHistory() {
     // Using dummy driver ID for now - in real app, get from auth/profile
+    // This will now load COMPLETED trips via API
     context.read<DriverTripsBloc>().add(const LoadTripHistory('driver_123'));
   }
 
@@ -559,9 +560,9 @@ class _TripHistoryScreenState extends State<TripHistoryScreen>
 
   Color _getStatusColor(DriverTripStatus status) {
     switch (status) {
-      case DriverTripStatus.assigned:
+      case DriverTripStatus.scheduled:
         return Colors.orange;
-      case DriverTripStatus.inProgress:
+      case DriverTripStatus.started:
         return Colors.blue;
       case DriverTripStatus.completed:
         return Colors.green;
@@ -572,9 +573,9 @@ class _TripHistoryScreenState extends State<TripHistoryScreen>
 
   IconData _getStatusIcon(DriverTripStatus status) {
     switch (status) {
-      case DriverTripStatus.assigned:
-        return Icons.assignment_turned_in;
-      case DriverTripStatus.inProgress:
+      case DriverTripStatus.scheduled:
+        return Icons.schedule;
+      case DriverTripStatus.started:
         return Icons.directions_bus;
       case DriverTripStatus.completed:
         return Icons.check_circle;

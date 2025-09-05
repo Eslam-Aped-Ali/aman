@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/shared/theme/colors/app_colors.dart';
 import '../../../../../core/shared/utils/responsive/responsive_utils.dart';
-import '../../../../../core/shared/services/storage_service.dart';
 import '../../../../../app/routing/routes.dart';
+import '../../../../../app/routing/app_routes_fun.dart';
+import '../../../../../features/shared_fetaures/auth/presentation/bloc/auth_cubit.dart';
+import '../../../../../features/shared_fetaures/auth/presentation/bloc/auth_state.dart';
+import '../../../../../core/shared/utils/enums.dart';
+import '../../../../../core/shared/utils/user_exprience/flash_helper.dart';
 
 class AdminProfileScreen extends StatefulWidget {
   const AdminProfileScreen({super.key});
@@ -97,24 +102,43 @@ class _AdminProfileScreenState extends State<AdminProfileScreen>
 
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.grey[900] : Colors.grey[50],
-      body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+      body: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state.requestState == RequestState.loading) {
+            setState(() => isLoading = true);
+          } else {
+            setState(() => isLoading = false);
+          }
+
+          if (state.requestState == RequestState.done) {
+            // Logout successful, navigate to role selection
+            showMessage('Logged out successfully',
+                messageType: MessageTypeTost.success);
+            pushAndRemoveUntil(NamedRoutes.i.selectRole);
+          } else if (state.requestState == RequestState.error) {
+            // Show error message
+            showMessage(state.msg, messageType: MessageTypeTost.fail);
+          }
+        },
+        child: isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                ),
+              )
+            : AnimatedBuilder(
+                animation: _animationController,
+                builder: (context, child) {
+                  return FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: _buildProfileTab(theme, isDarkMode, responsive),
+                    ),
+                  );
+                },
               ),
-            )
-          : AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) {
-                return FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: _buildProfileTab(theme, isDarkMode, responsive),
-                  ),
-                );
-              },
-            ),
+      ),
     );
   }
 
@@ -1021,14 +1045,9 @@ class _AdminProfileScreenState extends State<AdminProfileScreen>
     );
 
     if (confirmed == true) {
-      await StorageService.remove('isLoggedIn');
-      await StorageService.remove('userRole');
-      if (mounted) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          NamedRoutes.i.selectRole,
-          (route) => false,
-        );
-      }
+      // Use AuthCubit to handle logout properly
+      final authCubit = context.read<AuthCubit>();
+      await authCubit.logout();
     }
   }
 }

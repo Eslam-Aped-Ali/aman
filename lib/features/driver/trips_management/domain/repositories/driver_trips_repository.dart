@@ -14,4 +14,5 @@ abstract class DriverTripsRepository {
   Future<void> notifyPassengerArrival(String passengerId, String message);
   Future<DriverTrip> startTrip(String tripId);
   Future<DriverTrip> completeTrip(String tripId);
+  Future<DriverTrip> updateTripStatus(String tripId, String status);
 }

@@ -34,6 +34,7 @@ class _CurrentTripsScreenState extends State<CurrentTripsScreen>
 
   void _loadCurrentTrips() {
     // Using dummy driver ID for now - in real app, get from auth/profile
+    // This will now load both SCHEDULED and STARTED trips via API
     context.read<DriverTripsBloc>().add(const LoadCurrentTrips('driver_123'));
   }
 
@@ -114,11 +115,19 @@ class _CurrentTripsScreenState extends State<CurrentTripsScreen>
   }
 
   void _startTrip(DriverTrip trip) {
-    context.read<DriverTripsBloc>().add(StartTrip(trip.id));
+    // Update status to STARTED
+    context.read<DriverTripsBloc>().add(UpdateTripStatus(
+          tripId: trip.id,
+          status: 'STARTED',
+        ));
   }
 
   void _completeTrip(DriverTrip trip) {
-    context.read<DriverTripsBloc>().add(CompleteTrip(trip.id));
+    // Update status to COMPLETED
+    context.read<DriverTripsBloc>().add(UpdateTripStatus(
+          tripId: trip.id,
+          status: 'COMPLETED',
+        ));
   }
 
   void _viewPassengers(DriverTrip trip) {

@@ -1,6 +1,11 @@
 import 'trip_passenger.dart';
 
-enum DriverTripStatus { assigned, inProgress, completed, cancelled }
+enum DriverTripStatus {
+  scheduled, // SCHEDULED - initial status, shown in CurrentTripsScreen
+  started, // STARTED - when driver clicks start, shown in CurrentTripsScreen
+  completed, // COMPLETED - when driver clicks complete, shown in TripHistoryScreen
+  cancelled // CANCELLED - shown in TripHistoryScreen
+}
 
 class DriverTrip {
   final String id;
@@ -39,13 +44,13 @@ class DriverTrip {
     required this.assignedAt,
   });
 
-  bool get isAssigned => status == DriverTripStatus.assigned;
-  bool get isInProgress => status == DriverTripStatus.inProgress;
+  bool get isScheduled => status == DriverTripStatus.scheduled;
+  bool get isStarted => status == DriverTripStatus.started;
   bool get isCompleted => status == DriverTripStatus.completed;
   bool get isCancelled => status == DriverTripStatus.cancelled;
 
   bool get isUpcoming => departureTime.isAfter(DateTime.now());
-  bool get isCurrent => isInProgress || (isAssigned && !isUpcoming);
+  bool get isCurrent => isStarted || (isScheduled && !isUpcoming);
 
   int get totalPassengers => passengers.length;
   int get waitingPassengers => passengers.where((p) => p.isWaiting).length;
@@ -60,9 +65,9 @@ class DriverTrip {
 
   String get statusDisplayText {
     switch (status) {
-      case DriverTripStatus.assigned:
-        return isUpcoming ? 'Upcoming' : 'Ready to Start';
-      case DriverTripStatus.inProgress:
+      case DriverTripStatus.scheduled:
+        return isUpcoming ? 'Scheduled' : 'Ready to Start';
+      case DriverTripStatus.started:
         return 'In Progress';
       case DriverTripStatus.completed:
         return 'Completed';

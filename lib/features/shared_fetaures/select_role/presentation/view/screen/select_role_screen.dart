@@ -7,6 +7,7 @@ import '../../../../../../core/shared/services/storage_service.dart';
 import '../../../../../../core/shared/utils/responsive/responsive_utils.dart';
 import '../../../../../../generated/locale_keys.g.dart';
 import '../../../../../../generated/assets.gen.dart';
+import '../../../../../../core/shared/services/admin_validation_service.dart';
 
 class SelectRoleScreen extends StatefulWidget {
   const SelectRoleScreen({super.key});
@@ -97,6 +98,14 @@ class _SelectRoleScreenState extends State<SelectRoleScreen>
     });
 
     try {
+      // Check admin authorization before proceeding
+      if (role == 'admin') {
+        // For admin role selection, we need to ask for phone number first
+        // or show a dialog explaining that admin access requires authorization
+        _showAdminAccessDialog();
+        return;
+      }
+
       await StorageService.setString('selected_role', role);
 
       if (mounted) {
@@ -116,6 +125,67 @@ class _SelectRoleScreenState extends State<SelectRoleScreen>
         );
       }
     }
+  }
+
+  void _showAdminAccessDialog() {
+    final TextEditingController phoneController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(LocaleKeys.roles_admin_role.tr()),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              LocaleKeys.auth_adminNotAuthorized.tr(),
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: phoneController,
+              decoration: InputDecoration(
+                labelText: LocaleKeys.auth_phoneNumber.tr(),
+                hintText: LocaleKeys.auth_enterPhoneNumber.tr(),
+                border: const OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.phone,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(LocaleKeys.common_cancel.tr()),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final phone = phoneController.text.trim();
+              if (phone.isNotEmpty) {
+                if (AdminValidationService.isAuthorizedAdmin(phone)) {
+                  Navigator.of(context).pop();
+                  await StorageService.setString('selected_role', 'admin');
+                  if (mounted) {
+                    push(NamedRoutes.i.login, arguments: {'userRole': 'admin'});
+                  }
+                } else {
+                  // Show error message
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(LocaleKeys.auth_adminAccessDenied.tr()),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  }
+                }
+              }
+            },
+            child: Text(LocaleKeys.common_confirm.tr()),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

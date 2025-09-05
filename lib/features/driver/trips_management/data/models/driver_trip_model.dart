@@ -40,7 +40,7 @@ class DriverTripModel extends DriverTrip {
           : null,
       status: DriverTripStatus.values.firstWhere(
         (e) => e.name == json['status'],
-        orElse: () => DriverTripStatus.assigned,
+        orElse: () => DriverTripStatus.scheduled,
       ),
       passengers: (json['passengers'] as List<dynamic>)
           .map((p) => TripPassengerModel.fromJson(p as Map<String, dynamic>))

@@ -61,7 +61,21 @@
     "phoneVerificationMessage": "Please verify your phone number",
     "invalidPhoneNumber": "Please enter a valid phone number",
     "phoneNumberRequired": "Phone number is required",
-    "otpSendFailed": "Failed to send OTP. Please try again."
+    "otpSendFailed": "Failed to send OTP. Please try again.",
+    "incorrectPassword": "Incorrect password. Please check your password and try again.",
+    "phoneNotFound": "Phone number not found. Please check your phone number or register first.",
+    "invalidCredentials": "Invalid phone number or password. Please check your credentials and try again.",
+    "serverError": "Server error occurred. Please check your credentials and try again.",
+    "registrationFailed": "Registration failed. Please check your information and try again.",
+    "emailAlreadyExists": "This email is already registered. Please use a different email or try logging in.",
+    "phoneAlreadyExists": "This phone number is already registered. Please use a different number or try logging in.",
+    "weakPassword": "Password is too weak. Please use a stronger password with at least 8 characters.",
+    "invalidEmailFormat": "Please enter a valid email address.",
+    "invalidPhoneFormat": "Please enter a valid Oman phone number (e.g., +96899999999 or 99999999).",
+    "registrationServerError": "Registration is temporarily unavailable. Please try again later.",
+    "credentialsPreFilled": "Your credentials have been filled automatically",
+    "adminNotAuthorized": "You are not authorized to register or login as an admin. Please contact the system administrator.",
+    "adminAccessDenied": "Admin access denied. Your phone number is not in the authorized admin list."
   },
   "onboarding": {
     "title1": "Track Your Buses",

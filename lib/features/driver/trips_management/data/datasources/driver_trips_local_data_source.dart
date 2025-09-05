@@ -89,7 +89,7 @@ class DriverTripsLocalDataSourceImpl implements DriverTripsLocalDataSource {
         toLocation: 'Seeb',
         departureTime: now.add(const Duration(hours: 1)),
         arrivalTime: now.add(const Duration(hours: 2, minutes: 30)),
-        status: DriverTripStatus.assigned,
+        status: DriverTripStatus.scheduled,
         passengers: dummyPassengers1,
         busNumber: 'BUS-101',
         routeDescription:
@@ -106,7 +106,7 @@ class DriverTripsLocalDataSourceImpl implements DriverTripsLocalDataSource {
         toLocation: 'Nizwa',
         departureTime: now.add(const Duration(days: 1, hours: 2)),
         arrivalTime: now.add(const Duration(days: 1, hours: 4)),
-        status: DriverTripStatus.assigned,
+        status: DriverTripStatus.scheduled,
         passengers: dummyPassengers2,
         busNumber: 'BUS-201',
         routeDescription:
@@ -233,8 +233,8 @@ class DriverTripsLocalDataSourceImpl implements DriverTripsLocalDataSource {
     final trips = _driverTrips[driverId] ?? [];
     return trips
         .where((trip) =>
-            trip.status == DriverTripStatus.assigned ||
-            trip.status == DriverTripStatus.inProgress)
+            trip.status == DriverTripStatus.scheduled ||
+            trip.status == DriverTripStatus.started)
         .toList();
   }
 
@@ -339,7 +339,7 @@ class DriverTripsLocalDataSourceImpl implements DriverTripsLocalDataSource {
     }
 
     final updatedTrip = trip.copyWith(
-      status: DriverTripStatus.inProgress,
+      status: DriverTripStatus.started,
       actualDepartureTime: DateTime.now(),
     );
 
